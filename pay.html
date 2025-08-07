@@ -30,28 +30,28 @@
     <div class="copy" id="invoice" style="display:none"></div>
     <div class="small" style="margin-top:8px" id="t-tip">If backend is not set, it will simulate success in ~6s.</div>
     <div class="row" style="margin-top:10px">
-      <a class="btn" href="./index.html">← Back to Spin</a>
+      <a class="btn" href="./spin.html">← Back to Spin</a>
     </div>
   </div>
 </div>
 
 <script>
 /* i18n en+zh */
-const i18n={en:{title:"💸 Complete Your Payment",amt:"Amount",status:"Status",create:"Create payment",tip:"If backend is not set, it will simulate success in ~6s.",paid:"✅ Payment received!",timeout:"⏳ Timeout. Try again."},zh:{title:"💸 请完成支付",amt:"金额",status:"状态",create:"创建支付",tip:"若未配置后端，将在约 6 秒内模拟成功。",paid:"✅ 支付成功！",timeout:"⏳ 超时，请重试。"}};
-const lang=(()=>{const tg=window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;const nav=(navigator.language||"en").slice(0,2).toLowerCase();const cand=(tg||nav||"en").toLowerCase();return i18n[cand]?cand:"en";})();
-const L=i18n[lang];
+const I18N={en:{title:"💸 Complete Your Payment",amt:"Amount",status:"Status",create:"Create payment",tip:"If backend is not set, it will simulate success in ~6s.",paid:"✅ Payment received!",timeout:"⏳ Timeout. Try again."},zh:{title:"💸 请完成支付",amt:"金额",status:"状态",create:"创建支付",tip:"若未配置后端，将在约 6 秒内模拟成功。",paid:"✅ 支付成功！",timeout:"⏳ 超时，请重试。"}};
+const lang=(()=>{const tg=window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;const nav=(navigator.language||"en").slice(0,2).toLowerCase();const cand=(tg||nav||"en").toLowerCase();return I18N[cand]?cand:"en";})();
+const L=I18N[lang];
 function S(id,k){const el=document.getElementById(id);if(el)el.textContent=L[k];}
 S("t-title","title");S("t-amt","amt");S("t-status","status");S("t-create","create");S("t-tip","tip");
 
 /* config */
-const BASE_API=""; // ← 真实时填后端 /api 根；空=伪检测
-// amount param: ?amount=3
+const BASE_API=""; // ← 真实时填你的后端 /api 根；空=伪检测
 const q=new URLSearchParams(location.search);
 const amount=Number(q.get("amount")||"1")||1;
 document.getElementById("amt").textContent=String(amount);
 
 const statusEl=document.getElementById("status");
 const invoiceEl=document.getElementById("invoice");
+
 document.getElementById("createBtn").onclick=async()=>{
   if(!BASE_API){
     statusEl.textContent="Verifying on-chain…";
