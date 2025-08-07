@@ -4,34 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Prestige Aura – Spin (Lite)</title>
+<title>Prestige Aura – Spin</title>
 <style>
   :root{--bg:#0b0b0f;--fg:#f7f7f7;--gold:#d4af37;--accent:#8b5cf6;--ok:#22c55e;--warn:#f59e0b;--muted:#9ca3af;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
   .wrap{max-width:720px;margin:0 auto;padding:16px 16px 28px}
   header{display:flex;align-items:center;justify-content:center;padding:8px 0 4px}
-  .logo{width:42px;height:42px;border-radius:50%;background:#111;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--gold);box-shadow:0 0 18px #000 inset, 0 0 6px #000}
+  .logo{width:42px;height:42px;border-radius:50%;background:#111;display:grid;place-items:center;font-weight:700;color:var(--gold);box-shadow:0 0 18px #000 inset,0 0 6px #000}
   h1{font-size:18px;margin:10px 0 4px;text-align:center}
   .sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px}
+
   .card{border:1px solid #222;background:#111116;border-radius:12px;padding:12px;margin-top:12px}
   .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
   .badge{display:inline-block;border:1px solid #2a2a2f;padding:4px 8px;border-radius:999px;font-size:12px;color:#ddd}
   .btn{border:1px solid #222;background:#141418;border-radius:10px;padding:12px 10px;font-weight:700;cursor:pointer;color:#fff}
   .btn.gold{background:linear-gradient(180deg,#3a2f13,#1f180a);border-color:#3a2c10;color:var(--gold)}
-  .btn.accent{background:linear-gradient(180deg,#1a1630,#140f26);border-color:#251a49;color:#c7b8ff}
+  .btn.acc{background:linear-gradient(180deg,#1a1630,#140f26);border-color:#251a49;color:#c7b8ff}
   .note{font-size:11px;color:var(--muted);margin-top:4px;display:block}
-  .toast{position:fixed;right:12px;bottom:12px;background:#121217;border:1px solid #26262d;border-radius:10px;padding:10px 12px;font-size:12px;color:#eee;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-  .hide{display:none}
-  /* wheel */
+
   .wheelWrap{position:relative;display:flex;align-items:center;justify-content:center;margin:16px 0}
   .pointer{position:absolute;top:-4px;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:18px solid var(--warn);filter:drop-shadow(0 2px 2px #000)}
   .wheel{width:280px;height:280px;border-radius:50%;border:6px solid #222;background:#222;display:grid;place-items:center;transition:transform 4.4s cubic-bezier(.19,.8,.2,1);overflow:hidden}
   .seg{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:#e8e8ff}
   .seg span{display:block;transform:rotate(var(--rot)) translateY(-74px);text-align:center;width:110px}
-  /* sheet */
+
+  .toast{position:fixed;right:12px;bottom:12px;background:#121217;border:1px solid #26262d;border-radius:10px;padding:10px 12px;font-size:12px;color:#eee;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+  .hide{display:none}
+
   .modalBg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end}
   .sheet{background:#101015;border-top-left-radius:14px;border-top-right-radius:14px;border:1px solid #222;width:100%;max-width:720px;margin:0 auto;padding:14px}
   .small{font-size:12px}
+  .floating{position:fixed;right:10px;bottom:10px;background:#121217;border:1px solid #26262d;border-radius:10px;padding:8px 10px;font-size:12px}
 </style>
 </head>
 <body>
@@ -45,30 +48,32 @@
       <span class="badge" id="t-mode">🎯 Unlimited Draw</span>
       <span class="badge" id="inviteState">Invite 0 / 3</span>
     </div>
+
     <div class="wheelWrap">
       <div class="pointer"></div>
       <div class="wheel" id="wheel"></div>
     </div>
+
     <div class="row">
       <button class="btn gold" id="startBtn">🎰 <span id="t-start">Start</span></button>
-      <button class="btn accent" id="switchMode">💎 <span id="t-switch">Switch to Guaranteed</span></button>
+      <button class="btn acc" id="switchMode">💎 <span id="t-switch">Switch to Guaranteed</span></button>
     </div>
     <div class="note" id="t-note">Tip: Pay to reveal locked jackpot. Real-time verification.</div>
   </div>
 
   <div class="card">
-    <div class="row"><div class="small" id="t-feed">Live feed</div><div class="small" id="priceBox"><span id="price">1</span> TON</div></div>
+    <div class="row"><div class="small" id="t-feed">Live feed</div><div class="small"><span id="price">1</span> TON</div></div>
     <div class="small" id="feedBox">—</div>
     <div class="row" style="margin-top:8px">
+      <a class="btn" href="./index.html">← Home</a>
       <button class="btn" id="copyInvite">📣 <span id="t-invite">Invite Friends</span></button>
-      <a class="btn" href="./index.html">🏠 Home</a>
     </div>
   </div>
 </div>
 
 <div class="toast hide" id="toast"></div>
 
-<!-- pay sheet -->
+<!-- 支付弹层 -->
 <div class="modalBg hide" id="payModal">
   <div class="sheet">
     <h3 id="t-pay-title">🎯 Jackpot locked – complete payment</h3>
@@ -84,52 +89,82 @@
   </div>
 </div>
 
+<div id="feedFloat" class="floating">—</div>
+
 <script>
-/* i18n en+zh */
-const i18n={en:{title:"Everyone Can Win Free Gold & Luxury Replica Watches!",sub:"Spin now. Low cost, high thrill.",mode_unl:"🎯 Unlimited Draw",mode_gtd:"💎 Guaranteed Win",start:"Start",switch:"Switch to Guaranteed",switchBack:"Switch to Unlimited",invite:"Invite Friends",note:"Tip: Pay to reveal locked jackpot. Real-time verification.",feed:"Live feed",pay_title:"🎯 Jackpot locked – complete payment",pay_btn:"Create payment",close:"Close",pay_tip:"If backend is not set, it will simulate success in ~6s.",wheel:["THANKS","60% OFF","50% OFF","Lucky Gold","Pure Gold","Super Clone"],toasts:["won a Super Clone Watch worth $1000!","won Pure Gold Jewelry worth $500!","won a Lucky Charm Gold worth $300!"]},zh:{title:"人人都可白嫖黄金和顶级复刻手表！",sub:"现在就开转盘，低成本高刺激。",mode_unl:"🎯 无限抽奖",mode_gtd:"💎 百分百中奖",start:"开始抽奖",switch:"切换到百分百中奖",switchBack:"切回无限抽奖",invite:"邀请好友",note:"提示：先锁定大奖，支付后实时验证并开奖。",feed:"实时播报",pay_title:"🎯 大奖已锁定 – 请完成支付",pay_btn:"创建支付",close:"关闭",pay_tip:"若未配置后端，将在约 6 秒内模拟成功。",wheel:["谢谢惠顾","60% 优惠券","50% 优惠券","转运金","足金饰品","超级克隆"],toasts:["获得了价值 $1000 的超级克隆手表！","获得了价值 $500 的足金饰品！","获得了价值 $300 的转运足金饰品！"]}};
-const lang=(()=>{const tg=window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;const nav=(navigator.language||"en").slice(0,2).toLowerCase();const cand=(tg||nav||"en").toLowerCase();return i18n[cand]?cand:"en";})();
-const L=i18n[lang];
-function S(id,k){const el=document.getElementById(id);if(el)el.textContent=L[k];}
+/* ===== i18n ===== */
+const I18N={en:{title:"Everyone Can Win Free Gold & Luxury Replica Watches!",sub:"Spin now. Low cost, high thrill.",mode_unl:"🎯 Unlimited Draw",mode_gtd:"💎 Guaranteed Win",start:"Start",switch:"Switch to Guaranteed",switchBack:"Switch to Unlimited",invite:"Invite Friends",note:"Tip: Pay to reveal locked jackpot. Real-time verification.",feed:"Live feed",pay_title:"🎯 Jackpot locked – complete payment",pay_btn:"Create payment",close:"Close",pay_tip:"If backend is not set, it will simulate success in ~6s.",wheel:["THANKS","60% OFF","50% OFF","Lucky Gold","Pure Gold","Super Clone"],toasts:["won a Super Clone Watch worth $1000!","won Pure Gold Jewelry worth $500!","won a Lucky Charm Gold worth $300!"]},zh:{title:"人人都可白嫖黄金和顶级复刻手表！",sub:"现在就开转盘，低成本高刺激。",mode_unl:"🎯 无限抽奖",mode_gtd:"💎 百分百中奖",start:"开始抽奖",switch:"切换到百分百中奖",switchBack:"切回无限抽奖",invite:"邀请好友",note:"提示：先锁定大奖，支付后实时验证并开奖。",feed:"实时播报",pay_title:"🎯 大奖已锁定 – 请完成支付",pay_btn:"创建支付",close:"关闭",pay_tip:"若未配置后端，将在约 6 秒内模拟成功。",wheel:["谢谢惠顾","60% 优惠券","50% 优惠券","转运金","足金饰品","超级克隆"],toasts:["获得了价值 $1000 的超级克隆手表！","获得了价值 $500 的足金饰品！","获得了价值 $300 的转运金！"]}};
+const lang=(()=>{const tg=window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;const nav=(navigator.language||"en").slice(0,2).toLowerCase();const cand=(tg||nav||"en").toLowerCase();return I18N[cand]?cand:"en";})();
+const L=I18N[lang];
+function S(id,k){const el=document.getElementById(id); if(el) el.textContent=L[k];}
 S("t-title","title");S("t-sub","sub");S("t-mode","mode_unl");S("t-start","start");S("t-switch","switch");S("t-invite","invite");S("t-note","note");S("t-feed","feed");S("t-pay-title","pay_title");S("t-pay-btn","pay_btn");S("t-close","close");S("t-pay-tip","pay_tip");
 
-/* config */
-const BASE_API=""; // ← 后端 /api 根；空=伪检测
-const weekdays=[1,2,3,4,5];
-const isWeekend=()=>![1,2,3,4,5].includes((new Date()).getDay());
-const prices={unl:{wd:1,we:2}, gtd:[1,3,6,12,24]};
-const state={mode:"unlimited",round:1,locked:null,paid:false};
+/* ===== 入参 & 邀请 ===== */
+const q=new URLSearchParams(location.search);
+const initMode=q.get("mode")==="guaranteed"?"guaranteed":"unlimited";
+const ref=q.get("ref")||null;
+const myId=window.Telegram?.WebApp?.initDataUnsafe?.user?.id || (Math.random()+"").slice(2,9);
+document.getElementById("inviteState").textContent="Invite 0 / 3";
+document.getElementById("copyInvite").onclick=async()=>{const link=location.origin+location.pathname+`?mode=${initMode}&ref=${myId}`;try{await navigator.clipboard.writeText(link); toast("Copied!"); }catch{ toast(link); }};
 
-/* price + wheel */
+/* ===== 价格 / 模式 ===== */
+const BASE_API=""; // ← 真实接入时改成你的后端 /api
+const state={mode:initMode, round:1, locked:null};
+const prices={unl:{wd:1,we:2}, gtd:[1,3,6,12,24]};
+const isWeekend=()=>![1,2,3,4,5].includes((new Date()).getDay());
 function price(){return state.mode==="unlimited"?(isWeekend()?prices.unl.we:prices.unl.wd):prices.gtd[Math.min(state.round-1,prices.gtd.length-1)];}
 document.getElementById("price").textContent=String(price());
+
+/* ===== 轮盘 ===== */
 const wheel=document.getElementById("wheel");
 function render(){wheel.innerHTML="";const n=L.wheel.length;for(let i=0;i<n;i++){const a=i*(360/n);const seg=document.createElement("div");seg.className="seg";seg.style.background=`conic-gradient(from ${a}deg, rgba(139,92,246,.18) 0 ${(360/n)/2}deg, rgba(0,0,0,0) ${(360/n)/2}deg ${360/n}deg)`;const lab=document.createElement("span");lab.style.setProperty("--rot",(a+360/n/2)+"deg");lab.textContent=L.wheel[i];seg.appendChild(lab);wheel.appendChild(seg);}}
 render();
 
-/* live feed (fake) */
-(function(){const names=["@alex","@maria","@lihao","@john","@nina","@sam"];const box=document.getElementById("feedBox");const lines=L.toasts;function tick(){box.textContent=`${names[(Math.random()*names.length)|0]} ${lines[(Math.random()*lines.length)|0]}`;}tick();setInterval(tick,5000);})();
+/* ===== 假播报 ===== */
+(function feed(){
+  const users=["@alex","@maria","@lihao","@john","@nina","@sam","@peter","@anna"];
+  const lines=L.toasts; const box=document.getElementById("feedBox");
+  const flo=document.getElementById("feedFloat");
+  function tick(){ const t = `${users[(Math.random()*users.length)|0]} ${lines[(Math.random()*lines.length)|0]}`; box.textContent=t; flo.textContent=t; }
+  tick(); setInterval(tick,5000);
+})();
 
-/* invite copy */
-document.getElementById("copyInvite").onclick=async()=>{const id=window.Telegram?.WebApp?.initDataUnsafe?.user?.id || (Math.random()+"").slice(2,9);const link=location.origin+location.pathname+`?ref=${id}`;try{await navigator.clipboard.writeText(link);toast("Copied!")}catch{toast(link);}};
-
-/* helpers */
-const toastEl=document.getElementById("toast");function toast(s){toastEl.textContent=s;toastEl.classList.remove("hide");setTimeout(()=>toastEl.classList.add("hide"),2000);}
+/* ===== 工具 ===== */
+function toast(s){const el=document.getElementById("toast"); el.textContent=s; el.classList.remove("hide"); setTimeout(()=>el.classList.add("hide"),2000);}
 const payModal=document.getElementById("payModal");const payStatus=document.getElementById("payStatus");const invoiceBox=document.getElementById("invoiceBox");
 function openPay(){payModal.classList.remove("hide");payStatus.textContent="Waiting…";invoiceBox.style.display="none";}
 document.getElementById("closePay").onclick=()=>payModal.classList.add("hide");
 
-/* spin mapping */
+/* ===== 旋转 & 结果 ===== */
 function lockPrize(){ if(state.mode==="unlimited"){const bag=["THANKS","COUPON60","THANKS","COUPON50","THANKS","LUCKY","THANKS","GOLD","THANKS","WATCH"];return bag[(Math.random()*bag.length)|0];} else {const path=["COUPON60","COUPON50","LUCKY","GOLD","WATCH"];return path[Math.min(state.round-1,path.length-1)];}}
-function labelOf(code){switch(code){case"WATCH":return L.wheel[5];case"GOLD":return L.wheel[4];case"LUCKY":return L.wheel[3];case"COUPON50":return L.wheel[2];case"COUPON60":return L.wheel[1];default:return L.wheel[0];}}
+function labelOf(code){const m={"THANKS":L.wheel[0],"COUPON60":L.wheel[1],"COUPON50":L.wheel[2],"LUCKY":L.wheel[3],"GOLD":L.wheel[4],"WATCH":L.wheel[5]};return m[code]||L.wheel[0];}
 function rotateTo(code){const idx=({"THANKS":0,"COUPON60":1,"COUPON50":2,"LUCKY":3,"GOLD":4,"WATCH":5}[code]??0);const per=360/6;const center=(idx*per)+per/2;const base=360*4;const off=360-center;const deg=base+off+(Math.random()*6-3);wheel.style.transform=`rotate(${deg}deg)`;}
+function reveal(){ toast("🎉 "+labelOf(state.locked)); if(state.mode==="guaranteed"){ state.round=Math.min(state.round+1,5); document.getElementById("price").textContent=String(price()); }}
 
-/* buttons */
-document.getElementById("switchMode").onclick=()=>{if(state.mode==="unlimited"){state.mode="guaranteed";document.getElementById("t-mode").textContent=L.mode_gtd;document.getElementById("t-switch").textContent=L.switchBack;state.round=1;}else{state.mode="unlimited";document.getElementById("t-mode").textContent=L.mode_unl;document.getElementById("t-switch").textContent=L.switch;state.round=1;}document.getElementById("price").textContent=String(price());};
-document.getElementById("startBtn").onclick=()=>{state.locked=lockPrize();openPay();};
+/* ===== 按钮 ===== */
+document.getElementById("switchMode").onclick=()=>{ if(state.mode==="unlimited"){state.mode="guaranteed";document.getElementById("t-mode").textContent=L.mode_gtd;document.getElementById("t-switch").textContent=L.switchBack;state.round=1;} else {state.mode="unlimited";document.getElementById("t-mode").textContent=L.mode_unl;document.getElementById("t-switch").textContent=L.switch;state.round=1;} document.getElementById("price").textContent=String(price()); };
+document.getElementById("startBtn").onclick=()=>{ state.locked=lockPrize(); openPay(); };
 
-/* payment */
-document.getElementById("createPay").onclick=async()=>{const amt=price(); if(!BASE_API){payStatus.textContent="Verifying on-chain…";invoiceBox.style.display="block";invoiceBox.textContent="(DEV) Simulating payment…";setTimeout(()=>{payStatus.textContent="finished";toast("🎉 "+labelOf(state.locked));state.round=Math.min(state.round+1,5);document.getElementById("price").textContent=String(price());payModal.classList.add("hide");},6000);return;}
-try{const r=await fetch(BASE_API+"/create-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount:amt,user_id:"webapp"})});const d=await r.json();invoiceBox.style.display="block";invoiceBox.innerHTML=`Payment link: <a target="_blank" href="${d?.invoice_url||'#'}">${d?.invoice_url||'open'}</a>`;payStatus.textContent="Verifying on-chain…";let n=0;(function poll(){fetch(`${BASE_API}/check-payment?invoice_id=${encodeURIComponent(d?.id||d?.order_id||"")}`).then(x=>x.json()).then(j=>{if((j?.payment_status||j?.status)==="finished"){payStatus.textContent="finished";toast("🎉 "+labelOf(state.locked));state.round=Math.min(state.round+1,5);document.getElementById("price").textContent=String(price());payModal.classList.add("hide");}else if(++n<25)setTimeout(poll,3000);else payStatus.textContent="timeout";}).catch(()=>{if(++n<25)setTimeout(poll,3000);else payStatus.textContent="timeout";});})();}catch(e){invoiceBox.style.display="block";invoiceBox.textContent="Failed to create payment.";}
+/* ===== 支付（占位/真实） ===== */
+document.getElementById("createPay").onclick=async()=>{
+  const amt=price();
+  if(!BASE_API){
+    payStatus.textContent="Verifying on-chain…";
+    invoiceBox.style.display="block"; invoiceBox.textContent="(DEV) Simulating payment…";
+    setTimeout(()=>{ payStatus.textContent="finished"; payModal.classList.add("hide"); rotateTo(state.locked); setTimeout(reveal, 4600); }, 6000);
+    return;
+  }
+  try{
+    const r=await fetch(BASE_API+"/create-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount:amt,user_id:"webapp"})});
+    const d=await r.json();
+    invoiceBox.style.display="block"; invoiceBox.innerHTML=`Payment link: <a target="_blank" href="${d?.invoice_url||'#'}">${d?.invoice_url||'open'}</a>`;
+    payStatus.textContent="Verifying on-chain…";
+    let n=0;(function poll(){
+      fetch(`${BASE_API}/check-payment?invoice_id=${encodeURIComponent(d?.id||d?.order_id||"")}`)
+        .then(x=>x.json()).then(j=>{ if((j?.payment_status||j?.status)==="finished"){ payStatus.textContent="finished"; payModal.classList.add("hide"); rotateTo(state.locked); setTimeout(reveal, 4600); } else if(++n<25) setTimeout(poll,3000); else payStatus.textContent="timeout"; })
+        .catch(()=>{ if(++n<25) setTimeout(poll,3000); else payStatus.textContent="timeout"; });
+    })();
+  }catch(e){ invoiceBox.style.display="block"; invoiceBox.textContent="Failed to create payment."; }
 };
 </script>
 </body>
