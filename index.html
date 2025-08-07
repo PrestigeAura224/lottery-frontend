@@ -1,1 +1,26 @@
-<!DOCTYPE html><html><head><title>Spin the Wheel</title></head><body><h1>Spin Page</h1></body></html>
+<!-- index.html - 主转盘抽奖页 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spin & Win</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="icon" href="assets/logo.png" />
+</head>
+<body>
+  <div class="container">
+    <img src="assets/logo.png" alt="Logo" class="logo" />
+    <h2 data-i18n="title">🎯 Spin to Win!</h2>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    <button id="spinButton" data-i18n="start">Start</button>
+    <div id="resultPopup" class="popup hidden">
+      <p id="resultText"></p>
+      <button onclick="hideResult()">OK</button>
+    </div>
+    <div id="fakeNotice" class="floating-msg"></div>
+  </div>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
