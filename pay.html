@@ -1,1 +1,82 @@
-<!DOCTYPE html><html><head><title>Pay Now</title></head><body><h1>Payment Page</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prestige Aura – Pay</title>
+<style>
+  :root{--bg:#0b0b0f;--fg:#f7f7f7;--gold:#d4af37;--muted:#9ca3af}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:720px;margin:0 auto;padding:16px}
+  .card{border:1px solid #222;background:#111116;border-radius:12px;padding:14px}
+  h1{font-size:18px;margin:8px 0 12px;text-align:center}
+  .row{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
+  .btn{border:1px solid #222;background:#141418;border-radius:10px;padding:12px 10px;font-weight:700;cursor:pointer;color:#fff;width:100%}
+  .btn.gold{background:linear-gradient(180deg,#3a2f13,#1f180a);border-color:#3a2c10;color:var(--gold)}
+  .small{font-size:12px;color:var(--muted)}
+  .mono{font-variant-numeric:tabular-nums}
+  .copy{font-size:12px;border:1px dashed #333;border-radius:8px;padding:8px;margin-top:10px}
+  .ok{color:#22c55e} .warn{color:#f59e0b}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="t-title">💸 Complete Your Payment</h1>
+  <div class="card">
+    <div class="row"><div class="small" id="t-amt">Amount</div><div class="mono"><span id="amt">1</span> TON</div></div>
+    <div class="row"><div class="small" id="t-status">Status</div><div class="mono" id="status">Waiting…</div></div>
+    <button class="btn gold" id="createBtn"><span id="t-create">Create payment</span></button>
+    <div class="copy" id="invoice" style="display:none"></div>
+    <div class="small" style="margin-top:8px" id="t-tip">If backend is not set, it will simulate success in ~6s.</div>
+    <div class="row" style="margin-top:10px">
+      <a class="btn" href="./index.html">← Back to Spin</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* i18n en+zh */
+const i18n={en:{title:"💸 Complete Your Payment",amt:"Amount",status:"Status",create:"Create payment",tip:"If backend is not set, it will simulate success in ~6s.",paid:"✅ Payment received!",timeout:"⏳ Timeout. Try again."},zh:{title:"💸 请完成支付",amt:"金额",status:"状态",create:"创建支付",tip:"若未配置后端，将在约 6 秒内模拟成功。",paid:"✅ 支付成功！",timeout:"⏳ 超时，请重试。"}};
+const lang=(()=>{const tg=window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;const nav=(navigator.language||"en").slice(0,2).toLowerCase();const cand=(tg||nav||"en").toLowerCase();return i18n[cand]?cand:"en";})();
+const L=i18n[lang];
+function S(id,k){const el=document.getElementById(id);if(el)el.textContent=L[k];}
+S("t-title","title");S("t-amt","amt");S("t-status","status");S("t-create","create");S("t-tip","tip");
+
+/* config */
+const BASE_API=""; // ← 真实时填后端 /api 根；空=伪检测
+// amount param: ?amount=3
+const q=new URLSearchParams(location.search);
+const amount=Number(q.get("amount")||"1")||1;
+document.getElementById("amt").textContent=String(amount);
+
+const statusEl=document.getElementById("status");
+const invoiceEl=document.getElementById("invoice");
+document.getElementById("createBtn").onclick=async()=>{
+  if(!BASE_API){
+    statusEl.textContent="Verifying on-chain…";
+    invoiceEl.style.display="block"; invoiceEl.textContent="(DEV) Simulating payment…";
+    setTimeout(()=>{ statusEl.textContent=L.paid; statusEl.className="ok"; }, 6000);
+    return;
+  }
+  try{
+    const r=await fetch(BASE_API+"/create-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount,user_id:"webapp"})});
+    const d=await r.json();
+    invoiceEl.style.display="block";
+    invoiceEl.innerHTML=`Payment link: <a target="_blank" href="${d?.invoice_url||'#'}">${d?.invoice_url||'open'}</a>`;
+    statusEl.textContent="Verifying on-chain…";
+    let n=0;(function poll(){
+      fetch(`${BASE_API}/check-payment?invoice_id=${encodeURIComponent(d?.id||d?.order_id||"")}`)
+        .then(x=>x.json()).then(j=>{
+          if((j?.payment_status||j?.status)==="finished"){statusEl.textContent=L.paid;statusEl.className="ok";}
+          else if(++n<25) setTimeout(poll,3000);
+          else {statusEl.textContent=L.timeout; statusEl.className="warn";}
+        }).catch(()=>{ if(++n<25) setTimeout(poll,3000); else {statusEl.textContent=L.timeout; statusEl.className="warn";} });
+    })();
+  }catch(e){
+    invoiceEl.style.display="block"; invoiceEl.textContent="Failed to create payment.";
+  }
+};
+</script>
+</body>
+</html>
