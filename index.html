@@ -4,372 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Prestige Aura – Spin</title>
+<title>Prestige Aura – Home</title>
 <style>
-  :root{
-    --bg:#0b0b0f;--fg:#f7f7f7;--gold:#d4af37;--accent:#8b5cf6;--ok:#22c55e;--warn:#f59e0b;--muted:#9ca3af;
-  }
+  :root{--bg:#0b0b0f;--fg:#f7f7f7;--gold:#d4af37;--muted:#9ca3af;--accent:#8b5cf6;--card:#111116;--bd:#202025;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-  .wrap{max-width:720px;margin:0 auto;padding:16px 16px 28px}
-  header{display:flex;align-items:center;justify-content:center;padding:8px 0 4px}
-  header .logo{width:42px;height:42px;border-radius:50%;background:#111;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--gold);box-shadow:0 0 18px #000 inset, 0 0 6px #000}
-  h1{font-size:18px;margin:10px 0 4px;text-align:center}
-  .sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px}
-  .banner{background:linear-gradient(135deg,#151518,#0f0f12 50%,#1a1a20);border:1px solid #222;border-radius:12px;padding:12px;margin:8px 0;position:relative;overflow:hidden}
-  .banner::after{content:"";position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(212,175,55,.22),transparent 65%);animation:glow 5s linear infinite;transform:translateX(-50%);left:-20%}
+  .wrap{max-width:720px;margin:0 auto;padding:14px}
+  header{display:flex;justify-content:center;align-items:center}
+  .logo{width:42px;height:42px;border-radius:50%;background:#121216;display:grid;place-items:center;color:var(--gold);font-weight:700;box-shadow:0 0 18px #000 inset,0 0 6px #000}
+  .title{font-size:18px;text-align:center;margin:10px 0 6px}
+  .sub{font-size:12px;color:var(--muted);text-align:center}
+  .banner{margin:12px 0;border:1px solid var(--bd);background:linear-gradient(135deg,#16161b,#101015);border-radius:14px;padding:14px;position:relative;overflow:hidden}
+  .banner::after{content:"";position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(212,175,55,.18),transparent 65%);animation:glow 5s linear infinite;transform:translateX(-50%);left:-20%}
   @keyframes glow{0%{left:-20%}50%{left:120%}100%{left:-20%}}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .btn{border:1px solid #222;background:#141418;border-radius:10px;padding:12px 10px;font-weight:700;cursor:pointer;color:#fff;width:100%}
-  .btn:active{transform:translateY(1px)}
-  .btn.gold{background:linear-gradient(180deg,#3a2f13,#1f180a);border-color:#3a2c10;color:var(--gold)}
-  .btn.accent{background:linear-gradient(180deg,#1a1630,#140f26);border-color:#251a49;color:#c7b8ff}
-  .note{font-size:11px;color:var(--muted);margin-top:4px;display:block}
-  .card{border:1px solid #222;background:#111116;border-radius:12px;padding:12px;margin-top:12px}
-  .flex{display:flex;align-items:center;gap:8px}
-  .center{text-align:center}
-  .badge{display:inline-block;border:1px solid #2a2a2f;padding:4px 8px;border-radius:999px;font-size:12px;color:#ddd}
-  .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
-  .copy{font-size:12px;border:1px dashed #333;border-radius:8px;padding:8px}
-  /* wheel */
-  .wheelWrap{position:relative;display:flex;align-items:center;justify-content:center;margin:16px 0}
-  .pointer{position:absolute;top:-4px;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:18px solid var(--warn);filter:drop-shadow(0 2px 2px #000)}
-  .wheel{width:280px;height:280px;border-radius:50%;border:6px solid #222;background:#222;display:grid;place-items:center;transition:transform 4.4s cubic-bezier(.19,.8,.2,1);overflow:hidden}
-  .seg{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:#e8e8ff}
-  .seg span{display:block;transform:rotate(var(--rot)) translateY( -74px);text-align:center;width:110px}
-  .spinBtn{margin-top:10px}
-  /* toast / modal */
-  .toast{position:fixed;right:12px;bottom:12px;background:#121217;border:1px solid #26262d;border-radius:10px;padding:10px 12px;font-size:12px;color:#eee;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-  .hide{display:none}
-  .modalBg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end}
-  .sheet{background:#101015;border-top-left-radius:14px;border-top-right-radius:14px;border:1px solid #222;width:100%;max-width:720px;margin:0 auto;padding:14px}
-  .sheet h3{margin:0 0 8px}
-  .sheet .row+.row{margin-top:10px}
-  .count{font-variant-numeric:tabular-nums}
-  .ok{color:var(--ok)}
-  .warn{color:var(--warn)}
+  .points{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .pt{border:1px dashed #2a2a30;border-radius:10px;padding:8px;font-size:12px;color:#ddd}
+  .btn{width:100%;border:1px solid var(--bd);background:#171720;border-radius:12px;padding:12px 10px;color:#fff;font-weight:700;cursor:pointer}
+  .btn.gold{background:linear-gradient(180deg,#3a2f13,#1d1609);color:var(--gold)}
+  .btn.acc{background:linear-gradient(180deg,#1a1630,#120e22);color:#d6ccff}
+  .row{display:flex;gap:10px}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .card{border:1px solid var(--bd);background:var(--card);border-radius:12px;padding:12px}
+  .kv{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#ddd}
+  .copybox{font-size:12px;border:1px dashed #333;border-radius:8px;padding:8px;color:#cfcfe6}
+  .floating{position:fixed;right:10px;bottom:10px;background:#121217;border:1px solid #26262d;border-radius:10px;padding:8px 10px;font-size:12px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
   .muted{color:var(--muted)}
-  .small{font-size:12px}
+  .hide{display:none}
+  /* 小屏一屏显示优化 */
+  @media (max-width:420px){
+    .points{grid-template-columns:1fr}
+    .row{flex-direction:column}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header><div class="logo">PA</div></header>
 
-  <h1 id="t-title">Everyone Can Win Free Gold & Luxury Replica Watches!</h1>
+  <h1 class="title" id="t-title">人人都可白嫖黄金和顶级复刻手表！</h1>
   <div class="sub" id="t-sub">Spin now. Low cost, high thrill.</div>
 
   <div class="banner">
-    <div class="row">
-      <span class="badge" id="t-mode">🎯 Unlimited Draw</span>
-      <span class="badge" id="inviteState">Invite 0 / 3</span>
+    <div class="kv">
+      <div class="muted" id="t-tip">No scrolling • All-in-one screen • Telegram WebApp</div>
+      <div id="inviteState" class="muted">Invite 0 / 3</div>
     </div>
-
-    <div class="wheelWrap">
-      <div class="pointer"></div>
-      <div class="wheel" id="wheel"></div>
+    <div class="points">
+      <div class="pt" id="t-p1">Invite 3 friends → Re-open Guaranteed mode</div>
+      <div class="pt" id="t-p2">Post a win screenshot → TON cashback (up to full)</div>
     </div>
-
-    <button class="btn gold spinBtn" id="startBtn">🎰 <span id="t-start">Start</span></button>
+    <div class="row" style="margin-top:10px">
+      <button class="btn gold" onclick="goSpin('unlimited')">🎯 <span id="t-unl">Unlimited Draw</span></button>
+      <button class="btn acc"  onclick="goSpin('guaranteed')">💎 <span id="t-gtd">Guaranteed Win</span></button>
+    </div>
     <div class="row" style="margin-top:8px">
-      <button class="btn accent" id="switchMode">💎 <span id="t-switch">Switch to Guaranteed</span></button>
-      <button class="btn" id="copyInvite">📣 <span id="t-invite">Invite Friends</span></button>
+      <button class="btn" onclick="copyInvite()">📣 <span id="t-invite">Invite Friends</span></button>
     </div>
-    <div class="note" id="t-note">Tip: Pay to reveal locked jackpot. Real-time verification.</div>
   </div>
 
   <div class="card">
-    <div class="row">
-      <div class="small muted" id="t-pricing-title">Current price</div>
-      <div class="small"><span id="price">1</span> TON</div>
-    </div>
-    <div class="small muted" id="t-pricing-desc">Weekday Unlimited: 1 TON / Weekend: 2 TON</div>
+    <div class="kv"><b id="t-price-title">Current price</b><span><span id="price">1</span> TON</span></div>
+    <div class="muted" id="t-price-desc">Weekday Unlimited: 1 TON / Weekend: 2 TON. Guaranteed increases by round.</div>
   </div>
 
   <div class="card">
-    <div class="small" id="t-feed">Live feed</div>
-    <div class="small muted" id="feedBox">—</div>
-  </div>
-
-  <div class="card">
-    <div class="small" id="t-how">How it works</div>
-    <ul class="small muted" style="margin:8px 0 0 16px;line-height:1.6">
-      <li id="t-h1">Tap Start → Jackpot locked</li>
-      <li id="t-h2">Pay TON → Auto verify</li>
-      <li id="t-h3">Wheel slows → Prize revealed</li>
-      <li id="t-h4">Invite 3 friends → Re-open Guaranteed mode</li>
+    <div class="kv"><b id="t-how">How it works</b><span class="muted">PA</span></div>
+    <ul class="muted" style="margin:8px 0 0 16px;line-height:1.6;font-size:12px">
+      <li id="t-h1">Tap mode → Enter wheel</li>
+      <li id="t-h2">Jackpot locks on spin</li>
+      <li id="t-h3">Pay TON → Real/fake verify supported</li>
+      <li id="t-h4">Result revealed with confetti</li>
     </ul>
   </div>
-</div>
 
-<!-- toast -->
-<div class="toast hide" id="toast"></div>
-
-<!-- pay modal -->
-<div class="modalBg hide" id="payModal">
-  <div class="sheet">
-    <h3 id="t-pay-title">🎯 Jackpot locked – complete payment</h3>
-    <div class="row">
-      <div class="small muted" id="t-pay-amount">Amount</div>
-      <div class="small"><span id="pAmount">1</span> TON</div>
-    </div>
-    <div class="row">
-      <div class="small muted" id="t-pay-status">Status</div>
-      <div class="small count" id="payStatus">Waiting…</div>
-    </div>
-    <div class="row">
-      <button class="btn gold" id="createPay"><span id="t-pay-btn">Create payment</span></button>
-      <button class="btn" id="closePay"><span id="t-close">Close</span></button>
-    </div>
-    <div class="small muted" id="t-pay-tip" style="margin-top:8px">
-      If backend is not set, it will simulate success in ~6s.
-    </div>
-    <div class="copy" id="invoiceBox" style="margin-top:8px;display:none"></div>
+  <div class="card">
+    <div class="kv"><b id="t-share">Your invite link</b><span class="muted">Copy & share</span></div>
+    <div id="linkBox" class="copybox" style="margin-top:6px"></div>
   </div>
 </div>
 
+<!-- 假播报（不显示具体款式，只显示类型与价值） -->
+<div id="feed" class="floating">—</div>
+
 <script>
-/* ---------- i18n (en + zh) ---------- */
-const i18n = {
-  en: {
+/* ===== i18n: EN + ZH ===== */
+const I18N={
+  en:{
     title:"Everyone Can Win Free Gold & Luxury Replica Watches!",
     sub:"Spin now. Low cost, high thrill.",
-    mode_unl:"🎯 Unlimited Draw", mode_gtd:"💎 Guaranteed Win",
-    start:"Start", switch:"Switch to Guaranteed", switchBack:"Switch to Unlimited",
-    invite:"Invite Friends",
-    note:"Tip: Pay to reveal locked jackpot. Real-time verification.",
-    pricing_title:"Current price",
-    pricing_desc:"Weekday Unlimited: 1 TON / Weekend: 2 TON",
-    feed:"Live feed", how:"How it works",
-    h1:"Tap Start → Jackpot locked",
-    h2:"Pay TON → Auto verify",
-    h3:"Wheel slows → Prize revealed",
-    h4:"Invite 3 friends → Re-open Guaranteed mode",
-    pay_title:"🎯 Jackpot locked – complete payment",
-    pay_amount:"Amount", pay_status:"Status",
-    pay_btn:"Create payment", close:"Close",
-    pay_tip:"If backend is not set, it will simulate success in ~6s.",
-    toast_watch:"won a Super Clone Watch worth $1000!",
-    toast_gold:"won Pure Gold Jewelry worth $500!",
-    toast_lucky:"won a Lucky Charm Gold worth $300!",
+    tip:"No scrolling • All-in-one screen • Telegram WebApp",
+    unl:"Unlimited Draw", gtd:"Guaranteed Win", invite:"Invite Friends",
+    p1:"Invite 3 friends → Re-open Guaranteed mode",
+    p2:"Post a win screenshot → TON cashback (up to full)",
+    priceTitle:"Current price",
+    priceDesc:"Weekday Unlimited: 1 TON / Weekend: 2 TON. Guaranteed increases by round.",
+    how:"How it works",
+    h1:"Tap mode → Enter wheel",
+    h2:"Jackpot locks on spin",
+    h3:"Pay TON → Real/fake verify supported",
+    h4:"Result revealed with confetti",
+    share:"Your invite link",
     copied:"Invite link copied!",
-    wheel_labels:["THANKS","60% OFF","50% OFF","Lucky Gold","Pure Gold","Super Clone"]
+    feedLines:[
+      "won a Super Clone Watch worth $1000!",
+      "won Pure Gold Jewelry worth $500!",
+      "won a Lucky Charm Gold worth $300!"
+    ]
   },
-  zh: {
+  zh:{
     title:"人人都可白嫖黄金和顶级复刻手表！",
     sub:"现在就开转盘，低成本高刺激。",
-    mode_unl:"🎯 无限抽奖", mode_gtd:"💎 百分百中奖",
-    start:"开始抽奖", switch:"切换到百分百中奖", switchBack:"切回无限抽奖",
-    invite:"邀请好友",
-    note:"提示：先锁定大奖，支付后实时验证并开奖。",
-    pricing_title:"当前费用",
-    pricing_desc:"工作日：1 TON / 周末：2 TON",
-    feed:"实时播报", how:"玩法说明",
-    h1:"点击开始 → 大奖锁定",
-    h2:"支付 TON → 自动验证",
-    h3:"转盘减速 → 揭晓奖品",
-    h4:"邀请 3 人 → 重新解锁百分百中奖",
-    pay_title:"🎯 大奖已锁定 – 请完成支付",
-    pay_amount:"金额", pay_status:"状态",
-    pay_btn:"创建支付", close:"关闭",
-    pay_tip:"若未配置后端，将在约 6 秒内模拟成功。",
-    toast_watch:"获得了价值 $1000 的超级克隆手表！",
-    toast_gold:"获得了价值 $500 的足金饰品！",
-    toast_lucky:"获得了价值 $300 的转运足金饰品！",
+    tip:"一屏呈现 • Telegram 内打开 • 无需跳出",
+    unl:"无限抽奖", gtd:"百分百中奖", invite:"邀请好友",
+    p1:"邀请 3 人 → 重新解锁百分百中奖",
+    p2:"晒单返 TON（最高全返）",
+    priceTitle:"当前费用",
+    priceDesc:"工作日无限抽：1 TON / 周末：2 TON。百分百模式按轮次递增。",
+    how:"玩法说明",
+    h1:"选择模式 → 进入转盘",
+    h2:"点击开始 → 大奖先锁定",
+    h3:"支付 TON → 支持真实/伪验证",
+    h4:"验证通过 → 撒花开奖",
+    share:"你的邀请链接",
     copied:"邀请链接已复制！",
-    wheel_labels:["谢谢惠顾","60% 优惠券","50% 优惠券","转运金","足金饰品","超级克隆"]
+    feedLines:[
+      "获得了价值 $1000 的超级克隆手表！",
+      "获得了价值 $500 的足金饰品！",
+      "获得了价值 $300 的转运足金饰品！"
+    ]
   }
 };
 function getLang(){
   const tg = window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code;
   const nav = (navigator.language||"en").slice(0,2).toLowerCase();
-  const cand = (tg||nav||"en").toLowerCase();
-  return i18n[cand]?cand:"en";
+  const c = (tg||nav||"en").toLowerCase();
+  return I18N[c]?c:"en";
 }
-const L = i18n[getLang()];
-function txt(id, key){ const el=document.getElementById(id); if(el) el.textContent = L[key]; }
-txt("t-title","title"); txt("t-sub","sub");
-txt("t-mode","mode_unl"); txt("t-start","start");
-txt("t-switch","switch"); txt("t-invite","invite");
-txt("t-note","note"); txt("t-pricing-title","pricing_title");
-txt("t-pricing-desc","pricing_desc"); txt("t-feed","feed");
-txt("t-how","how"); txt("t-h1","h1"); txt("t-h2","h2");
-txt("t-h3","h3"); txt("t-h4","h4");
-txt("t-pay-title","pay_title"); txt("t-pay-amount","pay_amount");
-txt("t-pay-status","pay_status"); txt("t-pay-btn","pay_btn");
-txt("t-close","close"); txt("t-pay-tip","pay_tip");
+const L = I18N[getLang()];
+function T(id,key){const el=document.getElementById(id); if(el) el.textContent=L[key];}
 
-/* ---------- config / state ---------- */
-const BASE_API = ""; // ← 真实检测：填你的后端 /api 根地址；留空则伪检测
-const weekdays=[1,2,3,4,5];
-function isWeekend(){ const d=(new Date()).getDay(); return !(weekdays.includes(d)); }
-const config = {
-  unlimited: {weekday:1, weekend:2},
-  guaranteedSteps:[1,3,6,12,24], // 3 轮上限可在前端限制
-  labels: L.wheel_labels,
-  prizes: ["THANKS","COUPON60","COUPON50","LUCKY","GOLD","WATCH"]
-};
-const state = {mode:"unlimited", round:1, locked:null, paid:false, inviter:null, inviteCount:0};
-function currentPrice(){
-  if(state.mode==="unlimited") return isWeekend()?config.unlimited.weekend:config.unlimited.weekday;
-  const idx = Math.min(state.round-1, config.guaranteedSteps.length-1);
-  return config.guaranteedSteps[idx];
+/* ===== 填充文案 ===== */
+T("t-title","title"); T("t-sub","sub"); T("t-tip","tip");
+T("t-unl","unl"); T("t-gtd","gtd"); T("t-invite","invite");
+T("t-p1","p1"); T("t-p2","p2");
+T("t-price-title","priceTitle"); T("t-price-desc","priceDesc");
+T("t-how","how"); T("t-h1","h1"); T("t-h2","h2"); T("t-h3","h3"); T("t-h4","h4");
+T("t-share","share");
+
+/* ===== 价格逻辑（周末加价 / 百分百按轮次递增） ===== */
+const config={unl:{wd:1,we:2}, gtd:[1,3,6,12,24]};
+function isWeekend(){return ![1,2,3,4,5].includes((new Date()).getDay());}
+const price = isWeekend()? config.unl.we : config.unl.wd;
+document.getElementById("price").textContent = String(price);
+
+/* ===== 邀请：生成专属链接 + 上报 ref（可接后端） ===== */
+const myId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || (Math.random()+"").slice(2,9);
+const inviteLink = location.origin + location.pathname + "?ref=" + myId;
+document.getElementById("linkBox").textContent = inviteLink;
+
+function copyInvite(){
+  navigator.clipboard.writeText(inviteLink).then(()=>toast(L.copied)).catch(()=>toast(inviteLink));
 }
-document.getElementById("price").textContent = String(currentPrice());
-document.getElementById("pAmount").textContent = String(currentPrice());
 
-/* ---------- wheel render ---------- */
-const wheel = document.getElementById("wheel");
-function renderWheel(){
-  wheel.innerHTML="";
-  const n = config.labels.length;
-  for(let i=0;i<n;i++){
-    const a0 = (i*(360/n));
-    const seg = document.createElement("div");
-    seg.className="seg";
-    seg.style.background = `conic-gradient(from ${a0}deg, rgba(139,92,246,.18) 0 ${(360/n)/2}deg, rgba(0,0,0,0) ${(360/n)/2}deg ${360/n}deg)`;
-    const lab = document.createElement("span");
-    lab.style.setProperty("--rot", (a0+360/n/2)+"deg");
-    lab.textContent = config.labels[i];
-    seg.appendChild(lab); wheel.appendChild(seg);
-  }
+/* ===== 路由：进入转盘页 spin.html ===== */
+function goSpin(mode){
+  // 进入转盘时把 ref 也带过去
+  const ref = new URLSearchParams(location.search).get("ref");
+  const q = new URLSearchParams();
+  q.set("mode",mode);
+  if(ref) q.set("ref",ref);
+  location.href = "./spin.html?" + q.toString();
 }
-renderWheel();
 
-/* ---------- live feed (fake) ---------- */
+/* ===== 假播报（类型+价值） ===== */
 (function feed(){
-  const users = ["@alex","@maria","@lihao","@john","@nina","@sam","@peter","@anna"];
-  const lines = [ L.toast_watch, L.toast_gold, L.toast_lucky ];
-  const box = document.getElementById("feedBox");
-  function tick(){ box.textContent = `${users[(Math.random()*users.length)|0]} ${lines[(Math.random()*lines.length)|0]}`; }
+  const users=["@alex","@maria","@lihao","@john","@nina","@sam","@peter","@anna"];
+  const lines = L.feedLines;
+  const box=document.getElementById("feed");
+  function tick(){box.textContent = users[(Math.random()*users.length)|0] + " " + lines[(Math.random()*lines.length)|0];}
   tick(); setInterval(tick, 5000);
 })();
 
-/* ---------- invite tracking & copy ---------- */
-(function invite(){
-  const p = new URLSearchParams(location.search);
-  const ref = p.get("ref"); state.inviter = ref||null;
-  const myId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || (Math.random()+"").slice(2,9);
-  document.getElementById("copyInvite").onclick = async ()=>{
-    const link = location.origin+location.pathname+`?ref=${myId}`;
-    try{ await navigator.clipboard.writeText(link); showToast(L.copied); }catch{ showToast(link); }
-  };
-  if(ref && BASE_API){
-    fetch(BASE_API+"/invite",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ref,user:String(myId)})}).catch(()=>{});
-  }
-  if(BASE_API){
-    fetch(`${BASE_API}/invite/${myId}`).then(r=>r.json()).then(d=>{
-      state.inviteCount=d?.count||0; document.getElementById("inviteState").textContent = `Invite ${state.inviteCount} / 3`;
-    }).catch(()=>{document.getElementById("inviteState").textContent=`Invite 0 / 3`;});
-  }else{
-    document.getElementById("inviteState").textContent=`Invite 0 / 3`;
-  }
-})();
-
-/* ---------- helpers ---------- */
-function showToast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.remove("hide"); setTimeout(()=>el.classList.add("hide"),2200); }
-function openPay(){ document.getElementById("payModal").classList.remove("hide"); document.getElementById("payStatus").textContent="Waiting…"; document.getElementById("invoiceBox").style.display="none"; }
-function closePay(){ document.getElementById("payModal").classList.add("hide"); }
-document.getElementById("closePay").onclick = closePay;
-
-function chooseLockedPrize(){
-  if(state.mode==="unlimited"){
-    const bag = ["THANKS","COUPON60","THANKS","COUPON50","THANKS","LUCKY","THANKS","GOLD","THANKS","THANKS","WATCH"];
-    return bag[(Math.random()*bag.length)|0];
-  }else{
-    const path=["COUPON60","COUPON50","LUCKY","GOLD","WATCH"];
-    const idx=Math.min(state.round-1,path.length-1); return path[idx];
-  }
-}
-function prizeToLabel(code){
-  switch(code){
-    case "WATCH": return L.wheel_labels[5];
-    case "GOLD": return L.wheel_labels[4];
-    case "LUCKY": return L.wheel_labels[3];
-    case "COUPON50": return L.wheel_labels[2];
-    case "COUPON60": return L.wheel_labels[1];
-    default: return L.wheel_labels[0];
-  }
+/* ===== 小提示 ===== */
+function toast(s){
+  const el=document.getElementById("feed"); // 复用浮层
+  const old=el.textContent;
+  el.textContent=s;
+  setTimeout(()=>{el.textContent=old;},1600);
 }
 
-/* ---------- spin flow ---------- */
-const startBtn = document.getElementById("startBtn");
-const switchBtn = document.getElementById("switchMode");
-function refreshPrice(){ document.getElementById("price").textContent=String(currentPrice()); document.getElementById("pAmount").textContent=String(currentPrice()); }
-switchBtn.onclick = ()=>{
-  if(state.mode==="unlimited"){ state.mode="guaranteed"; document.getElementById("t-mode").textContent=L.mode_gtd; document.getElementById("t-switch").textContent=L.switchBack; state.round=1; }
-  else{ state.mode="unlimited"; document.getElementById("t-mode").textContent=L.mode_unl; document.getElementById("t-switch").textContent=L.switch; state.round=1; }
-  refreshPrice();
-};
-
-function rotateToPrize(code){
-  // map prize to sector index (6 sectors)
-  const idx = {THANKS:0, COUPON60:1, COUPON50:2, LUCKY:3, GOLD:4, WATCH:5}[code] ?? 0;
-  const per = 360/6; const targetCenter = (idx*per)+per/2;
-  const base = 360*4; // spins
-  const off = 360 - targetCenter; // because pointer at top
-  const deg = base + off + (Math.random()*6-3);
-  wheel.style.transform = `rotate(${deg}deg)`;
-}
-
-/* ---------- payment (real or fake) ---------- */
-const createPayBtn = document.getElementById("createPay");
-createPayBtn.onclick = async ()=>{
-  const amount = currentPrice();
-  const invoiceBox = document.getElementById("invoiceBox");
-  if(!BASE_API){
-    // fake flow
-    document.getElementById("payStatus").textContent="Verifying on-chain…";
-    invoiceBox.style.display="block"; invoiceBox.textContent="(DEV) No backend set. Simulating payment…";
-    setTimeout(()=>{ document.getElementById("payStatus").textContent="finished"; state.paid=true; closePay(); reveal(); }, 6000);
-    return;
-  }
-  try{
-    const r = await fetch(BASE_API+"/create-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount,user_id:"webapp"})});
-    const d = await r.json();
-    invoiceBox.style.display="block"; invoiceBox.innerHTML=`Payment link: <a target="_blank" href="${d?.invoice_url||'#'}">${d?.invoice_url||'open'}</a>`;
-    // poll
-    document.getElementById("payStatus").textContent="Verifying on-chain…";
-    pollPayment(d?.id||d?.order_id, ok=>{
-      document.getElementById("payStatus").textContent = ok?"finished":"timeout";
-      if(ok){ state.paid=true; closePay(); reveal(); }
-    });
-  }catch(e){
-    invoiceBox.style.display="block"; invoiceBox.textContent="Failed to create payment.";
-  }
-};
-function pollPayment(orderId, cb){
-  let n=0; (function tick(){
-    fetch(`${BASE_API}/check-payment?invoice_id=${encodeURIComponent(orderId)}`)
-      .then(r=>r.json()).then(d=>{
-        const ok = (d?.payment_status||d?.status)==="finished";
-        if(ok) return cb(true);
-        if(++n<25) setTimeout(tick,3000); else cb(false);
-      }).catch(()=>{ if(++n<25) setTimeout(tick,3000); else cb(false); });
-  })();
-}
-
-function reveal(){
-  const label = prizeToLabel(state.locked);
-  showToast("🎉 " + label);
-  if(state.mode==="guaranteed"){ state.round = Math.min(state.round+1, 5); refreshPrice(); }
-}
-
-/* ---------- start spin ---------- */
-startBtn.onclick = ()=>{
-  // lock prize & open pay
-  state.locked = chooseLockedPrize();
-  openPay();
-};
-
-document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closePay(); });
-
-/* ---------- little init ---------- */
-(function init(){
-  // draw 6 slices background stripes
-  const stripes = document.createElement("div");
-  stripes.style.position="absolute"; stripes.style.inset="0";
-  wheel.appendChild(stripes);
-})();
+/* ===== 邀请进度（前端占位，接后端可更新） ===== */
+document.getElementById("inviteState").textContent = "Invite 0 / 3";
 </script>
 </body>
 </html>
+
